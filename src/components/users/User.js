@@ -1,42 +1,42 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 import Spinner from '../layout/Spinner';
 import Repos from '../repos/Repos';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import GithubContext from '../../context/github/githubContext';
+
+const User = ( { match} ) =>  {
+    
+
+    const githubContext = useContext(GithubContext);
+
+    const {getUser, loading, user, repos, getUserRepos } = githubContext;
 
 
-export class User extends Component {
-    componentDidMount() {
-        this.props.getUser(this.props.match.params.login);
-        this.props.getUserRepos(this.props.match.params.login);
-    }
+    useEffect(() => {
+        getUser(match.params.login);
+        getUserRepos(match.params.login);
+        // eslint-disable-next-line
+    }, []);
+    
 
-    static propTypes = {
-        loading: PropTypes.bool,
-        user: PropTypes.object.isRequired,
-        getUsers: PropTypes.func.isRequired,
-        getUserRepos: PropTypes.func.isRequired,
-        repos: PropTypes.array.isRequired,
-    }
+    
+    const {
+        name, 
+        avatar_url,
+        location,
+        bio,
+        blog,
+        login,
+        html_url,
+        company,
+        followers,
+        following,
+        public_repos,
+        public_gists,
+        hireable
+    } = user;
 
-    render() {
-        const {
-            name, 
-            avatar_url,
-            location,
-            bio,
-            blog,
-            login,
-            html_url,
-            company,
-            followers,
-            following,
-            public_repos,
-            public_gists,
-            hireable
-        } = this.props.user;
-
-        const {loading, repos} = this.props;
+        
 
         if (loading) return <Spinner />
         return (
@@ -91,7 +91,9 @@ export class User extends Component {
             </Fragment>
             
          )
-    }
+    
 }
 
-export default User
+
+
+export default User;
